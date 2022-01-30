@@ -12,7 +12,7 @@ urlpatterns = [
     path("categories", views.categories, name="categories"),
     
     # API urls
-    path("category_view/<str:category_name>", views.category_view, name="category_view"),
+    path("categories/category_view/<str:category_name>", views.category_view, name="category_view"),
     path("article/<int:article_id>", views.article_view, name = "article_view"),
     path("markProject", views.mark_project, name="markProject")
 ]
