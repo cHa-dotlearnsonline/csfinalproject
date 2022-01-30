@@ -40,7 +40,7 @@ function LoadCategory() {
             var show_all = document.querySelector('.goalArticles')
             show_all.style.display = 'block'
             console.log(`The category is: ${category_name}`)
-            fetch(`http://127.0.0.1:8000/category_view/${category_name}`)
+            fetch(`http:sdgforjones.herokuapp.com/category_view/${category_name}`)
             .then(response => response.json())
             .then(articles => {
                 articles.forEach(article => {

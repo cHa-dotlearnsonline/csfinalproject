@@ -35,7 +35,7 @@ function LoadArticle() {
 
             // send a fetch request for this particular title and then display 
             // the content of the the title
-            fetch(`http://127.0.0.1:8000/article/${article_id}`)
+            fetch(`/article/${article_id}`)
             .then(response => response.json())
             .then(article => {
                 document.querySelector('#articleView').innerHTML = article['content']
