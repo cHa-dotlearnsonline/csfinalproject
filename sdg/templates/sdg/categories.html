@@ -1,0 +1,64 @@
+{% extends "sdg/layout.html" %}
+{% load static %}
+
+{% block body %}
+<p>{{message}}</p>
+{% if categories %}
+    <div class="goalCategories album py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                {% for category in categories %}
+                <div class="col-md-4">
+                    <div class="card mb-4 box-shadow" style="max-width: 20rem">
+                        <img class="card-img-top" src="{% static 'sdg/' %}E-WEB-Goal-{{ forloop.counter }}.png" alt="SDG Number {{ forloop.counter }}">
+                        <div class="card-body">
+                            <ul>
+                                <li class="sdGoal">{{category}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="goalArticles">
+        
+    </div>
+<script>
+LoadCategory()
+
+// create a load category that i will use to load the category for 
+// everytime a category is  loaded.
+function LoadCategory() {
+    categoryNodelist = document.querySelectorAll('.sdGoal')
+    categoryNodelist.forEach(category => {
+        var category_name = category.innerText
+        category.addEventListener('click', () => {
+            var hide_all = document.querySelector('.goalCategories')
+            hide_all.style.display = 'none'
+            var show_all = document.querySelector('.goalArticles')
+            show_all.style.display = 'block'
+            console.log(`The category is: ${category_name}`)
+            fetch(`http://127.0.0.1:8000/category_view/${category_name}`)
+            .then(response => response.json())
+            .then(articles => {
+                articles.forEach(article => {
+                    var articleDiv = document.createElement('li')
+                    title = article["title"]
+                    articleDiv.innerHTML += title
+                    document.querySelector(".goalArticles").append(articleDiv)
+
+                    articleDiv.addEventListener("click", () => {
+                        articleDiv.style.display = 'none'
+                        content = `<div>${article["content"]}</div>`
+                        document.querySelector(".goalArticles").innerHTML = content
+                    })
+                })
+            })
+        })
+    })
+}
+</script>
+{% endif %}
+{% endblock %}

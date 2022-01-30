@@ -1,0 +1,110 @@
+{% extends "sdg/layout.html" %}
+
+{% block body %}
+    <button class="hideButton btn btn-sm btn-outline-info" id="addProject">Add Project</button>
+    <button class="btn btn-sm btn-outline-info" id="yourProjects">Your Projects</button>
+    <button class="btn btn-sm btn-outline-info" id="allProjects" >All Projects</button>
+    
+    <div class="showForm">
+        <h2>Add a Project</h2>
+        <form action="{% url 'AddProject' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group" >
+                <input autofocus class="form-control" type="text" name="title" placeholder="Project Title">
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="category">
+                    {% for category in categories %}
+                        <option class="form-control" value="{{category}}">{{category}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                Please Seperate your goals with commas
+            </div>
+            <div class="form-group">
+                <textarea name = "goals" class="form-control" placeholder="Seperate your goals with commas Please" style="height: 5em;"></textarea>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Add Project">
+        </form>
+    </div>
+    
+    <div class="showProjects">
+        {% for project in projects %}
+        <div class="card">
+        <h3>{{project.title}}</h3>
+        <h5>Project Goals</h5>
+        <em>Project Category: {{project.category}}</em>
+        {% if project.Incompletegoals %}
+        <form action="{% url 'markProject' %}" method="post">
+            {% csrf_token %}
+            <input autofocus class="form-control" type="hidden" name="id" value="{{project.id}}">
+            {% for goal in project.Incompletegoals %}
+                <input id="goalCheckBox" type="checkbox" name="goal{{forloop.counter}}" value="{{goal}}">
+                <label for="goal{{forloop.counter}}" id="goallabel">{{goal}}</label><br>
+            {% endfor %}
+            <input  id="saveButton" class="btn btn-primary" type="submit" value="Save">
+            </form>
+        {% endif %}
+            {% for goal in project.Completegoals %}
+            <li><s>{{goal}}</s></li>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="showAllProjects">
+        {% csrf_token %}
+        {% for project in allprojects %}
+            <div class="card">
+            <h3>{{project.title}}</h3>
+            <h5>Project Goals</h5>
+            <em>Project Category: {{project.category}}</em>
+            {% if project.Incompletegoals %}
+                {% for goal in project.Incompletegoals %}
+                    <li>{{goal}}</li>
+                {% endfor %}
+        {% endif %}
+        {% if project.Completegoals %}
+                {% for goal in project.Completegoals %}
+                <li><s>{{goal}}</s></li>
+                {% endfor %}
+        {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <div class="funded_things">
+        
+    </div>
+    <script>
+        HideForm()
+        function HideForm() {
+            document.querySelector('.showProjects').style.display='block'
+            document.querySelector('.showForm').style.display = 'none'
+            
+            document.querySelector('.showAllProjects').style.display='none'
+
+
+            showingForm = document.querySelector('.hideButton')
+            showingForm.addEventListener('click', () => {
+                document.querySelector('.hideButton').style.display = 'none'
+                document.querySelector('.showForm').style.display = 'block'
+                document.querySelector('.showProjects').style.display='none'
+                document.querySelector('.showAllProjects').style.display='none'
+            })
+            yourProject = document.querySelector('#yourProjects')
+            yourProject.addEventListener('click', () => {
+                document.querySelector('#addProject').style.display = 'inline'
+                document.querySelector('.showProjects').style.display = 'block'
+                document.querySelector('.showForm').style.display = 'none'
+                document.querySelector('.showAllProjects').style.display='none'
+            })
+            allProject = document.querySelector("#allProjects")
+            allProject.addEventListener('click', () =>{
+                document.querySelector('#addProject').style.display = 'inline'
+                document.querySelector('.showProjects').style.display = 'none'
+                document.querySelector('.showForm').style.display = 'none'
+                document.querySelector('.showAllProjects').style.display='block'               
+            })
+        }
+    </script>
+{% endblock %}

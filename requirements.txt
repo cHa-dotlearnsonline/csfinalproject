@@ -1,0 +1,7 @@
+dj-database-url
+Django
+gunicorn
+psycopg2
+pytz
+whitenoise
+markdown2
